@@ -1,72 +1,77 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(CharacterController))]
 public class movement : MonoBehaviour
 {
-    public Camera playerCamera;
-    public float walkSpeed = 6f;
-    public float runSpeed = 12f;
-    public float jumpPower = 7f;
-    public float gravity = 10f;
-    public float defaultHeight = 2f;
-    public float crouchHeight = 1f;
-    public float crouchSpeed = 3f;
+    //input references
+    PlayerInput playerInput;// the component on the player
+    InputAction moveAction; //the move in input system
+    InputAction sprintAction;
+    InputAction crouchAction;
 
-    private Vector3 moveDirection = Vector3.zero;
-    private float rotationX = 0;
-    private CharacterController characterController;
+    //move speeds
+    public float moveSpeed = 4f;
+    public float sprintSpeed = 8f;
+    public float crouchSpeed = 2f;
 
-    private bool canMove = true;
+    //check to see if we are crouching or sprinting
+    bool isSprinting;
+    bool isCrouching;
+    
+
+
 
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        playerInput = GetComponent<PlayerInput>();
+        //Get the move settings in the input system
+        moveAction = playerInput.actions.FindAction("Move");
+        sprintAction = playerInput.actions.FindAction("Sprint");
+        crouchAction = playerInput.actions.FindAction("Crouch");
     }
 
+    // Update is called once per frame
     void Update()
     {
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-        Vector3 right = transform.TransformDirection(Vector3.right);
+        HandleSprint();
+        HandleCrouch();
+        MovePlayer();
+    }
 
-        bool isRunning = Input.GetKey(KeyCode.LeftShift);
-        float curSpeedX = canMove ? (isRunning ? runSpeed : walkSpeed) * Input.GetAxis("Vertical") : 0;
-        float curSpeedY = canMove ? (isRunning ? runSpeed : walkSpeed) * Input.GetAxis("Horizontal") : 0;
-        float movementDirectionY = moveDirection.y;
-        moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
-        if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
-        {
-            moveDirection.y = jumpPower;
-        }
-        else
-        {
-            moveDirection.y = movementDirectionY;
-        }
 
-        if (!characterController.isGrounded)
+
+    void MovePlayer(){
+    Vector2 direction = moveAction.ReadValue<Vector2>();
+    
+    float currentSpeed = moveSpeed;
+
+        //apply sprinting speed
+        if (isSprinting)
         {
-            moveDirection.y -= gravity * Time.deltaTime;
+            currentSpeed = sprintSpeed;
         }
 
-        if (Input.GetKey(KeyCode.R) && canMove)
+        //applying crouch speed
+        if (isCrouching)
         {
-            characterController.height = crouchHeight;
-            walkSpeed = crouchSpeed;
-            runSpeed = crouchSpeed;
-
+            currentSpeed = crouchSpeed;
         }
-        else
-        {
-            characterController.height = defaultHeight;
-            walkSpeed = 6f;
-            runSpeed = 12f;
-        }
+    //convert to 3d vector
+    transform.position += new Vector3(direction.x,0,direction.y) * currentSpeed * Time.deltaTime;
+    
+    }
 
-        characterController.Move(moveDirection * Time.deltaTime);
+    //checks to see if shift is being held
+    void HandleSprint()
+    {
+        isSprinting = sprintAction.IsPressed();
+    }
 
+    //Checks to see if ctrl is being held
+    void HandleCrouch()
+    {
+        isCrouching = crouchAction.IsPressed();
     }
 }
+
