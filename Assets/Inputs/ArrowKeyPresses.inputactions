@@ -1,0 +1,68 @@
+{
+    "version": 1,
+    "name": "ArrowKeyPresses",
+    "maps": [
+        {
+            "name": "ArrowKeys",
+            "id": "38eb1ba3-0973-418f-bd16-e1ba1cbd0e7f",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "9b098532-2ca3-48c3-9d86-be5344dd7c4c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a6e2be5f-714e-4ea9-83ff-42baa3819d0e",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "665b212a-cae9-4b38-94d4-b2b265da59c5",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b809ea6b-6bb3-4d29-bd16-7042e3fba3f8",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a5fe477b-c444-4467-8e94-d87ffa42cd86",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
