@@ -4,21 +4,92 @@ using UnityEngine;
 
 public class MeanGuy : MonoBehaviour
 {
+    enum State { Patrol, Chase }
+    State state = State.Patrol;
+    Vector3[] currentPath;
+
     public float speed = 5;
     public float waitTime = .3f;
     public float turnSpeed = 90;
     public Transform pathHolder;
 
+    public float viewDistance;
+    public LayerMask viewMask;
+    float viewAngle;
+
+    private VisionCone visionCone;
+
+    Color originalConeColor;
+
+    Transform player;
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        visionCone = GetComponentInChildren<VisionCone>();
+
+        viewAngle = visionCone.viewAngle;
+        viewDistance = visionCone.viewDistance;
+        originalConeColor = visionCone.GetComponent<MeshRenderer>().material.color;
+
+
         Vector3[] waypoints = new Vector3[pathHolder.childCount];
+
+        
         for (int i = 0; i < waypoints.Length; i++)
         {
             waypoints[i] = pathHolder.GetChild(i).position;
             waypoints[i] = new Vector3(waypoints[i].x, transform.position.y, waypoints[i].z);
         }
+
+        currentPath = waypoints;
         StartCoroutine(FollowPath(waypoints));
         
+    }
+    bool canSeePlayer()
+    {
+        if (Vector3.Distance(transform.position, player.position) > viewDistance)
+            return false;
+
+            Vector3 dirToPlayer = (player.position - transform.position).normalized;
+            float angle = Vector3.Angle(transform.forward, dirToPlayer);
+                if (angle > viewAngle / 2f)
+                    return false;
+
+                  if (Physics.Linecast(transform.position, player.position, out RaycastHit hit, viewMask))
+                {
+                    return hit.collider.CompareTag("Player");
+                }  
+                
+        
+        return false;
+    }
+    void Update()
+    {
+        if (canSeePlayer())
+        {
+            if(state != State.Chase){
+            StopAllCoroutines();
+            state = State.Chase;
+            }
+
+            visionCone.GetComponent<MeshRenderer>().material.color = Color.red;
+            ChasePlayer();
+        }
+        else
+        {
+            visionCone.GetComponent<MeshRenderer>().material.color = originalConeColor;
+            if (state == State.Chase)
+            {
+                StopAllCoroutines();
+                state = State.Patrol;
+                StartCoroutine(FollowPath(currentPath));
+                
+            }
+            
+        }
+        
+
     }
     IEnumerator FollowPath(Vector3[] waypoints)
     {
@@ -46,7 +117,7 @@ public class MeanGuy : MonoBehaviour
     {
         Vector3 dirToLookTarget = (lookTarget - transform.position).normalized;
         float targetAngle = 90 - Mathf.Atan2(dirToLookTarget.z, dirToLookTarget.x) * Mathf.Rad2Deg;
-       while (Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, targetAngle)) > 0.05f) {
+        while (Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, targetAngle)) > 0.05f) {
         
             float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetAngle, turnSpeed * Time.deltaTime);
             transform.eulerAngles = Vector3.up * angle;
@@ -55,6 +126,18 @@ public class MeanGuy : MonoBehaviour
         
     }
     }
+
+    void ChasePlayer()
+    {
+        // Rotate toward player
+        Vector3 dir = (player.position - transform.position).normalized;
+        Quaternion lookRot = Quaternion.LookRotation(dir);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRot, turnSpeed * Time.deltaTime);
+
+        // Move toward player
+        transform.position += transform.forward * speed * Time.deltaTime;
+    }
+
     void OnDrawGizmos()
     {
         Vector3 startPosition = pathHolder.GetChild(0).position;
