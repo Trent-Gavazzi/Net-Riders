@@ -60,6 +60,7 @@ public class movement : MonoBehaviour
     //convert to 3d vector
     transform.position += new Vector3(direction.x,0,direction.y) * currentSpeed * Time.deltaTime;
     
+    
     }
 
     //checks to see if shift is being held
