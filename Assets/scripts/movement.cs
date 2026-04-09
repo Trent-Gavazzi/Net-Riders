@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class movement : MonoBehaviour
+public class Movement : MonoBehaviour
 {
     //input references
     PlayerInput playerInput;// the component on the player
@@ -19,10 +19,15 @@ public class movement : MonoBehaviour
     bool isCrouching;
     
 
-
+    //putting some respawn stuff here
+    public static Transform respawnPoint;
 
     void Start()
     {
+        //Setting the respawn point 
+        respawnPoint = GameObject.FindGameObjectWithTag("Respawn").transform;
+
+
         playerInput = GetComponent<PlayerInput>();
         //Get the move settings in the input system
         moveAction = playerInput.actions.FindAction("Move");
@@ -74,5 +79,12 @@ public class movement : MonoBehaviour
     {
         isCrouching = crouchAction.IsPressed();
     }
+
+    //respawn function
+    public void Respawn()
+    {
+        transform.position = respawnPoint.position;
+    }
 }
+
 
