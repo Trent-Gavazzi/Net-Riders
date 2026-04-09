@@ -26,7 +26,6 @@ public class TerminalMenuScript : MonoBehaviour
         Time.timeScale = 1f;
         isTerminalActive = false;
         door.openDoor();
-
     }
 
     public void stopTerminal()
