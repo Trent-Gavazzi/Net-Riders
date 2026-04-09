@@ -1,30 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MeanGuy : MonoBehaviour
 {
-    enum State { Patrol, Chase }
+    enum State { Patrol, Chase, Return }
     State state = State.Patrol;
-    Vector3[] currentPath;
+    bool waiting = false;
 
-    public float speed = 5;
+    public bool stationary; 
+    Quaternion originalRotation;    
+    public float turnSpeed = 360f;
+    private NavMeshAgent agent;
+    private Vector3 startPosition;
+    Vector3[] waypoints;
+    int waypointIndex = 0;
     public float waitTime = .3f;
-    public float turnSpeed = 90;
     public Transform pathHolder;
+    
 
+    Movement playerScript;
+
+    //this is vision stuff
     public float viewDistance;
     public LayerMask viewMask;
     float viewAngle;
 
     private VisionCone visionCone;
 
+
     Color originalConeColor;
 
     Transform player;
     void Start()
     {
+        agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        playerScript = player.GetComponent<Movement>();
+        
+        
+        originalRotation = transform.rotation;
+        agent.updateRotation = true;
+
 
         visionCone = GetComponentInChildren<VisionCone>();
 
@@ -33,7 +52,7 @@ public class MeanGuy : MonoBehaviour
         originalConeColor = visionCone.GetComponent<MeshRenderer>().material.color;
 
 
-        Vector3[] waypoints = new Vector3[pathHolder.childCount];
+        waypoints = new Vector3[pathHolder.childCount];
 
         
         for (int i = 0; i < waypoints.Length; i++)
@@ -42,8 +61,8 @@ public class MeanGuy : MonoBehaviour
             waypoints[i] = new Vector3(waypoints[i].x, transform.position.y, waypoints[i].z);
         }
 
-        currentPath = waypoints;
-        StartCoroutine(FollowPath(waypoints));
+        startPosition = transform.position;
+        agent.SetDestination(waypoints[0]);
         
     }
     bool canSeePlayer()
@@ -66,77 +85,106 @@ public class MeanGuy : MonoBehaviour
     }
     void Update()
     {
-        if (canSeePlayer())
-        {
-            if(state != State.Chase){
-            StopAllCoroutines();
-            state = State.Chase;
-            }
-
-            visionCone.GetComponent<MeshRenderer>().material.color = Color.red;
-            ChasePlayer();
-        }
-        else
-        {
-            visionCone.GetComponent<MeshRenderer>().material.color = originalConeColor;
-            if (state == State.Chase)
-            {
-                StopAllCoroutines();
-                state = State.Patrol;
-                StartCoroutine(FollowPath(currentPath));
-                
-            }
-            
-        }
-        
-
-    }
-    IEnumerator FollowPath(Vector3[] waypoints)
+        switch (state)
     {
-        transform.position = waypoints[0];
+        case State.Patrol:
+            PatrolUpdate();
+            break;
 
-        int targetWaypointIndex = 1;
-        Vector3 targetWaypoint = waypoints[targetWaypointIndex];
-        transform.LookAt(targetWaypoint);
+        case State.Chase:
+            ChaseUpdate();
+            break;
+
+        case State.Return:
+            ReturnUpdate();
+            break;
+    }
         
-        while (true)
+
+    }
+    void PatrolUpdate()
+{
+    visionCone.GetComponent<MeshRenderer>().material.color = originalConeColor;
+
+    if (canSeePlayer())
+    {
+        state = State.Chase;
+        waiting = false;
+        return;
+    }
+
+    if (!waiting &&!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + 0.1f)
+
+    {
+        StartCoroutine(GoToNextWaypoint());
+    }
+}
+void ReturnUpdate()
+{
+    visionCone.GetComponent<MeshRenderer>().material.color = originalConeColor;
+
+    if (canSeePlayer())
+    {
+        state = State.Chase;
+        return;
+    }
+
+    if (!waiting && !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + 0.1f)
+    {
+        state = State.Patrol;
+        agent.SetDestination(waypoints[waypointIndex]);
+        if (stationary)
+        StartCoroutine(ReturnToOriginalRotation());
+
+    }
+}
+
+    
+    void ChaseUpdate()
+    {
+        visionCone.GetComponent<MeshRenderer>().material.color = Color.red;
+
+        if (!canSeePlayer())
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetWaypoint, speed * Time.deltaTime);
-            if (transform.position == targetWaypoint)
-            {
-                targetWaypointIndex = (targetWaypointIndex + 1) % waypoints.Length;
-                targetWaypoint = waypoints[targetWaypointIndex];
-                yield return new WaitForSeconds(waitTime);
-                yield return StartCoroutine(TurnToFace(targetWaypoint));
-            }
-            yield return null;
+            state = State.Return;
+            agent.SetDestination(startPosition);
+            return;
         }
-    }
-
-    IEnumerator TurnToFace(Vector3 lookTarget)
+    float dist = Vector3.Distance(transform.position, player.position);
+    if (dist < 1.0f) 
     {
-        Vector3 dirToLookTarget = (lookTarget - transform.position).normalized;
-        float targetAngle = 90 - Mathf.Atan2(dirToLookTarget.z, dirToLookTarget.x) * Mathf.Rad2Deg;
-        while (Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, targetAngle)) > 0.05f) {
-        
-            float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetAngle, turnSpeed * Time.deltaTime);
-            transform.eulerAngles = Vector3.up * angle;
+         playerScript.Respawn();
 
-            yield return null;
-        
+        state = State.Return;
+        agent.SetDestination(startPosition);
+    return;
     }
+        agent.SetDestination(player.position);
     }
-
-    void ChasePlayer()
+IEnumerator GoToNextWaypoint()
     {
-        // Rotate toward player
-        Vector3 dir = (player.position - transform.position).normalized;
-        Quaternion lookRot = Quaternion.LookRotation(dir);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRot, turnSpeed * Time.deltaTime);
+        waiting = true;
+        yield return new WaitForSeconds(waitTime);
 
-        // Move toward player
-        transform.position += transform.forward * speed * Time.deltaTime;
+        waypointIndex = (waypointIndex + 1) % waypoints.Length;
+        agent.SetDestination(waypoints[waypointIndex]);
+        waiting = false;
+    }    
+
+    IEnumerator ReturnToOriginalRotation()
+{
+    while (Quaternion.Angle(transform.rotation, originalRotation) > 0.1f)
+    {
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation,
+            originalRotation,
+            turnSpeed * Time.deltaTime
+        );
+
+        yield return null;
     }
+}
+
 
     void OnDrawGizmos()
     {
@@ -151,9 +199,12 @@ public class MeanGuy : MonoBehaviour
 
         Gizmos.DrawLine(previousPosition, startPosition);
     }
-    
+    public void TurnAround()
+{
+    transform.Rotate(0f, 180f, 0f);
+}
 }
 
         
-    
+
 
