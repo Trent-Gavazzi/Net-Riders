@@ -5,7 +5,6 @@ public class TerminalMenuScript : MonoBehaviour
     public static bool isTerminalActive;
     public GameObject TerminalMenu;
     public DoorController door;
-    public MeanGuy stationaryGuard;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,11 +27,6 @@ public class TerminalMenuScript : MonoBehaviour
         isTerminalActive = false;
         door.openDoor();
 
-        if (stationaryGuard != null)
-        {
-            stationaryGuard.TurnAround();
-            
-        }
     }
 
     public void stopTerminal()
