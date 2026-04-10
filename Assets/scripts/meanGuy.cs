@@ -153,7 +153,7 @@ void ReturnUpdate()
     float dist = Vector3.Distance(transform.position, player.position);
     if (dist < 1.0f) 
     {
-         playerScript.Respawn();
+        playerScript.Respawn();
 
         state = State.Return;
         agent.SetDestination(startPosition);

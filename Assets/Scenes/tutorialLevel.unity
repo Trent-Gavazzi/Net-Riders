@@ -777,7 +777,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TerminalMenuScript
   TerminalMenu: {fileID: 0}
   door: {fileID: 0}
-  stationaryGuard: {fileID: 1452370334}
 --- !u!65 &649597022
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -917,7 +916,7 @@ GameObject:
   - component: {fileID: 1239196922}
   m_Layer: 7
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1038,7 +1037,7 @@ Transform:
   m_GameObject: {fileID: 1239196921}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.18, z: 0}
+  m_LocalPosition: {x: 1.108, y: -0.000000059604645, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -66268,7 +66267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af93f1935f67283418d95e2d9d31d911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerminalInteract
-  terminal: {fileID: 854166028}
+  terminal: {fileID: 0}
 --- !u!64 &1325080059
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -66613,17 +66612,6 @@ PrefabInstance:
       addedObject: {fileID: 515827339}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47cd5929acadd2641b691b4e1d9e450b, type: 3}
---- !u!114 &1452370334 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9139287918952095804, guid: 47cd5929acadd2641b691b4e1d9e450b, type: 3}
-  m_PrefabInstance: {fileID: 1452370333}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85b6f8cefb956fc47a9dfc28f6e8d6e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MeanGuy
 --- !u!4 &1452370335 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3750107206743396414, guid: 47cd5929acadd2641b691b4e1d9e450b, type: 3}
@@ -66968,10 +66956,9 @@ GameObject:
   - component: {fileID: 1768585513}
   - component: {fileID: 1768585512}
   - component: {fileID: 1768585515}
-  - component: {fileID: 1768585516}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Player
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -67025,7 +67012,7 @@ Transform:
   m_GameObject: {fileID: 1768585511}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.108, y: 0, z: 0}
+  m_LocalPosition: {x: 58, y: 1.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -67076,7 +67063,7 @@ GameObject:
   m_TagString: Respawn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2056466890
 Transform:
@@ -67132,6 +67119,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4737229661896600079, guid: 47cd5929acadd2641b691b4e1d9e450b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2568454399202278188, guid: d42200c3a44304645bc63ba0e93b0e8a, type: 3}
       propertyPath: door
       value: 
@@ -67238,3 +67229,4 @@ SceneRoots:
   - {fileID: 2056466890}
   - {fileID: 1452370333}
   - {fileID: 649597025}
+  - {fileID: 1325080056}
