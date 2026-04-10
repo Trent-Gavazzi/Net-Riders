@@ -83,6 +83,7 @@ public class Movement : MonoBehaviour
     //respawn function
     public void Respawn()
     {
+        Debug.Log("Respawning player...");
         transform.position = respawnPoint.position;
     }
 }
