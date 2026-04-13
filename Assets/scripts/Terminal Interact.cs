@@ -3,6 +3,7 @@ using UnityEngine;
 public class TerminalInteract : MonoBehaviour, IInteractable
 {
     public TerminalMenuScript terminal;
+    
     public void Interact()
     {
         terminal.startTerminal();

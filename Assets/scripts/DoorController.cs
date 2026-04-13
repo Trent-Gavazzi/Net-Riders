@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class DoorController : MonoBehaviour
 {
     public Animator anim;
-
+    public GameObject colorWire;
+    
     void Start()
     {
         anim.SetBool("CanOpen", false);

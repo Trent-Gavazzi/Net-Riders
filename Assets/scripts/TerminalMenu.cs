@@ -5,6 +5,8 @@ public class TerminalMenuScript : MonoBehaviour
     public static bool isTerminalActive;
     public GameObject TerminalMenu;
     public DoorController door;
+    public TerminalTimer timer;
+    public arrowInputManager arrows;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -13,11 +15,20 @@ public class TerminalMenuScript : MonoBehaviour
         isTerminalActive = false;
     }
 
+    void Update()
+    {
+        if (!timer.IsTimeRemaining())
+        {
+            stopTerminal();
+        }
+    }
+    
     public void startTerminal()
     {
         TerminalMenu.SetActive(true);
         Time.timeScale = 0f;
         isTerminalActive = true;
+        timer.StartTimer();
     }
 
     public void solveTerminal()
@@ -25,6 +36,7 @@ public class TerminalMenuScript : MonoBehaviour
         TerminalMenu.SetActive(false);
         Time.timeScale = 1f;
         isTerminalActive = false;
+        timer.StopTimer();
         door.openDoor();
     }
 
@@ -33,5 +45,8 @@ public class TerminalMenuScript : MonoBehaviour
         TerminalMenu.SetActive(false);
         Time.timeScale = 1f;
         isTerminalActive = false;
+        timer.StopTimer();
+        timer.ResetTimer();
+        arrows.ResetArrows(); 
     }
 }
