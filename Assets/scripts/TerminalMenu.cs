@@ -7,6 +7,7 @@ public class TerminalMenuScript : MonoBehaviour
     public DoorController door;
     public TerminalTimer timer;
     public arrowInputManager arrows;
+    public MeanGuy enemy; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -38,6 +39,12 @@ public class TerminalMenuScript : MonoBehaviour
         isTerminalActive = false;
         timer.StopTimer();
         door.openDoor();
+
+        if(enemy != null)
+        {
+            enemy.TurnAround();
+        }
+
     }
 
     public void stopTerminal()
