@@ -9,6 +9,8 @@ public class Movement : MonoBehaviour
     InputAction sprintAction;
     InputAction crouchAction;
 
+   // private Vector3 direction;
+
     //move speeds
     public float moveSpeed = 4f;
     public float sprintSpeed = 8f;
@@ -17,6 +19,10 @@ public class Movement : MonoBehaviour
     //check to see if we are crouching or sprinting
     bool isSprinting;
     bool isCrouching;
+
+    //smooth character rotation stuff
+    [SerializeField] private float smoothTime = .05f;
+    private float currentVelocity;
     
 
     //putting some respawn stuff here
@@ -38,6 +44,7 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        RotateCharacter();
         HandleSprint();
         HandleCrouch();
         MovePlayer();
@@ -86,4 +93,20 @@ public class Movement : MonoBehaviour
         Debug.Log("Respawning player...");
         transform.position = respawnPoint.position;
     }
+
+    public void RotateCharacter()
+    {
+        
+        //there's probably definitely a better way to write this block of code x.x
+        Vector2 direction1 = moveAction.ReadValue<Vector2>();
+        if(direction1.sqrMagnitude == 0) return; //this is so it doesnt snap back after you stop moving
+        Vector3 direction = new Vector3(direction1.x,0,direction1.y);
+
+        //spinny part
+        var targetAngle = Mathf.Atan2(direction.x,direction.z) * Mathf.Rad2Deg;
+        var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y,targetAngle,ref currentVelocity, smoothTime);
+        transform.rotation = Quaternion.Euler(.0f,angle,.0f);        
+    }
 }
+
+
