@@ -18,6 +18,11 @@ public class Interactor : MonoBehaviour
 
     private Transform currentTarget;
 
+    void Awake()
+    {
+        InputSystem.Update();
+    }
+
     void Start()
     {
         if (interactUI != null)
@@ -32,27 +37,35 @@ public class Interactor : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hitInfo, interactRange))
         {
-            var interactable = hitInfo.collider.GetComponentInParent<IInteractable>();
+            var monos = hitInfo.collider.GetComponentsInParent<MonoBehaviour>();
+            IInteractable interactable = null;
+
+            foreach (var mono in monos)
+            {
+                if (mono is IInteractable i)
+                {
+                    interactable = i;
+                    break;
+                }
+            }
 
             if (interactable != null)
             {
                 currentTarget = hitInfo.collider.transform;
 
-                if (Keyboard.current.eKey.wasPressedThisFrame)
+                if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
                 {
                     interactable.Interact();
                 }
             }
         }
 
-        // Show/hide UI
-        if (interactUI != null)
-            interactUI.gameObject.SetActive(currentTarget != null);
+    if (interactUI != null)
+        interactUI.gameObject.SetActive(currentTarget != null);
 
-        // Move UI in world space
-        if (currentTarget != null)
-        {
-            interactUI.position = currentTarget.position + uiOffset;
-        }
+    if (currentTarget != null)
+    {
+        interactUI.position = currentTarget.position + uiOffset;
+    }
     }
 }
