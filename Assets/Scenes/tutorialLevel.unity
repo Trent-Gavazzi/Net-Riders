@@ -67040,6 +67040,18 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3928142705349507306, guid: f43cbf7a667fafc4cad48d2410b53385, type: 3}
+      propertyPath: m_Speed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3968410869096380128, guid: f43cbf7a667fafc4cad48d2410b53385, type: 3}
+      propertyPath: viewAngle
+      value: 25.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3968410869096380128, guid: f43cbf7a667fafc4cad48d2410b53385, type: 3}
+      propertyPath: viewDistance
+      value: 34.63
+      objectReference: {fileID: 0}
     - target: {fileID: 4290023135698451114, guid: f43cbf7a667fafc4cad48d2410b53385, type: 3}
       propertyPath: m_Name
       value: MeanGuy Notmove

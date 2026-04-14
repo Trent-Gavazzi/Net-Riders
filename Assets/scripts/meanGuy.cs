@@ -151,7 +151,7 @@ void ReturnUpdate()
             return;
         }
     float dist = Vector3.Distance(transform.position, player.position);
-    if (dist < 1.0f) 
+    if (dist < 2.0f) 
     {
         playerScript.Respawn();
 
@@ -199,8 +199,27 @@ IEnumerator GoToNextWaypoint()
 
         Gizmos.DrawLine(previousPosition, startPosition);
     }
+
+    IEnumerator SmoothTurn(float angle, float speed)
+{
+    Quaternion startRot = transform.rotation;
+    Quaternion targetRot = Quaternion.Euler(0f, transform.eulerAngles.y + angle, 0f);
+
+    while (Quaternion.Angle(transform.rotation, targetRot) > 0.1f)
+    {
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation,
+            targetRot,
+            speed * Time.deltaTime
+        );
+
+        yield return null;
+    }
+
+    transform.rotation = targetRot;
+}
     public void TurnAround()
 {
-    transform.Rotate(0f, 180f, 0f);
+    StartCoroutine(SmoothTurn(-90f, turnSpeed));
 }
 }
