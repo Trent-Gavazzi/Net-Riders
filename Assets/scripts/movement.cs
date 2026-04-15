@@ -24,7 +24,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private float smoothTime = .05f;
     private float currentVelocity;
     
-
+    Rigidbody rb;
     //putting some respawn stuff here
     public static Transform respawnPoint;
 
@@ -32,6 +32,9 @@ public class Movement : MonoBehaviour
     {
         //Setting the respawn point 
         respawnPoint = GameObject.FindGameObjectWithTag("Respawn").transform;
+
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true; 
 
 
         playerInput = GetComponent<PlayerInput>();
@@ -69,9 +72,9 @@ public class Movement : MonoBehaviour
         {
             currentSpeed = crouchSpeed;
         }
-    //convert to 3d vector
-    transform.position += new Vector3(direction.x,0,direction.y) * currentSpeed * Time.deltaTime;
-    
+        Vector3 move = new Vector3(direction.x,0,direction.y) * currentSpeed * Time.deltaTime;
+    //preserve vertical velocity for gravity and jumping
+    rb.MovePosition(rb.position + move);
     
     }
 

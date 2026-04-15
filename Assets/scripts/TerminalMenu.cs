@@ -8,6 +8,7 @@ public class TerminalMenuScript : MonoBehaviour
     public TerminalTimer timer;
     public arrowInputManager arrows;
     public MeanGuy enemy; 
+    public Bridge bridge;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -44,7 +45,10 @@ public class TerminalMenuScript : MonoBehaviour
         {
             enemy.TurnAround();
         }
-
+        if(bridge != null)
+        {
+            bridge.ActivateBridge();
+        }
     }
 
     public void stopTerminal()
