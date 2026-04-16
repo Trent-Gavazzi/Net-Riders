@@ -10,6 +10,7 @@ public class TerminalMenuScript : MonoBehaviour
     public MeanGuy enemy; 
     public Bridge bridge;
     public tvScreen screen;
+    private bool solved = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,6 +29,10 @@ public class TerminalMenuScript : MonoBehaviour
     
     public void startTerminal()
     {
+        if(solved)
+        {
+            return;
+        }
         TerminalMenu.SetActive(true);
         Time.timeScale = 0f;
         isTerminalActive = true;
@@ -54,6 +59,7 @@ public class TerminalMenuScript : MonoBehaviour
         {
             screen.turnOn();
         }
+        solved = true;
     }
 
     public void stopTerminal()
