@@ -9,6 +9,7 @@ public class TerminalMenuScript : MonoBehaviour
     public arrowInputManager arrows;
     public MeanGuy enemy; 
     public Bridge bridge;
+    public tvScreen screen;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -48,6 +49,10 @@ public class TerminalMenuScript : MonoBehaviour
         if(bridge != null)
         {
             bridge.ActivateBridge();
+        }
+        if(screen != null)
+        {
+            screen.turnOn();
         }
     }
 
