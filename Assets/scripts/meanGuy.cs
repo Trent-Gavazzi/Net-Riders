@@ -19,7 +19,8 @@ public class MeanGuy : MonoBehaviour
     public float waitTime = .3f;
     public Transform pathHolder;
     
-
+    public float chaseSpeed = 6f;
+    public float patrolSpeed = 3f;  
     Movement playerScript;
 
     //this is vision stuff
@@ -29,18 +30,22 @@ public class MeanGuy : MonoBehaviour
 
     private VisionCone visionCone;
 
-
+    public float loseSightTime = 1f;
+    private float timeSinceLastSeen;
     Color originalConeColor;
 
     Transform player;
     void Start()
     {
+        
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-
+        agent.speed = patrolSpeed;
         playerScript = player.GetComponent<Movement>();
         
-        
+        agent.autoBraking = true;
+
+
         originalRotation = transform.rotation;
         agent.updateRotation = true;
 
@@ -112,6 +117,12 @@ public class MeanGuy : MonoBehaviour
         waiting = false;
         return;
     }
+        if (stationary)
+        {
+            agent.ResetPath();
+            return;
+        }
+
 
     if (!waiting &&!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + 0.1f)
 
@@ -132,6 +143,11 @@ void ReturnUpdate()
     if (!waiting && !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + 0.1f)
     {
         state = State.Patrol;
+
+
+        agent.speed = patrolSpeed;
+        
+        agent.angularSpeed = 120f;
         agent.SetDestination(waypoints[waypointIndex]);
         if (stationary)
         StartCoroutine(ReturnToOriginalRotation());
@@ -144,14 +160,35 @@ void ReturnUpdate()
     {
         visionCone.GetComponent<MeshRenderer>().material.color = Color.red;
 
+        if(canSeePlayer())
+        {
+            timeSinceLastSeen = 0f;
+        }
+        else
+        {
+            timeSinceLastSeen += Time.deltaTime;
+            if (timeSinceLastSeen >= loseSightTime)
+            {
+                state = State.Return;
+                agent.speed = patrolSpeed;
+                
+                agent.angularSpeed = 120f;
+                agent.SetDestination(startPosition);
+                return;
+            }
+        }
+/*
         if (!canSeePlayer())
         {
             state = State.Return;
+
+            agent.speed = patrolSpeed;  
             agent.SetDestination(startPosition);
             return;
         }
+        */
     float dist = Vector3.Distance(transform.position, player.position);
-    if (dist < 2.0f) 
+    if (dist < 1.0f) 
     {
         playerScript.Respawn();
 
@@ -159,6 +196,10 @@ void ReturnUpdate()
         agent.SetDestination(startPosition);
     return;
     }
+        agent.speed = chaseSpeed;
+        agent.acceleration = 100000f;
+        agent.angularSpeed = 200f;
+        
         agent.SetDestination(player.position);
     }
 IEnumerator GoToNextWaypoint()
