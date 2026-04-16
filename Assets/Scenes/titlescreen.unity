@@ -198,6 +198,45 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &236173420 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8070385452043395876, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
+  m_PrefabInstance: {fileID: 3879432804448440542}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &236173425
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236173420}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 400, y: 100, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &236173426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236173420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e264399cbe733141ba3f9855630f417, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Clickable
+  sceneLoader: {fileID: 839767678}
 --- !u!1 &839767677
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,6 +293,7 @@ GameObject:
   - component: {fileID: 1973206505}
   - component: {fileID: 1973206504}
   - component: {fileID: 1973206503}
+  - component: {fileID: 1973206507}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -379,6 +419,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1973206507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973206502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3145b0178f9754f83cabab2220f075, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::cameraClicker
 --- !u!1001 &1855812984546439556
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -560,11 +612,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 348186631922112014, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 348186631922112014, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 348186631922112014, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
@@ -581,6 +633,22 @@ PrefabInstance:
     - target: {fileID: 348186631922112014, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 348186631922112014, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: set_name
+      objectReference: {fileID: 0}
+    - target: {fileID: 348186631922112014, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnityEditor.MonoScript, UnityEditor.CoreModule
+      objectReference: {fileID: 0}
+    - target: {fileID: 348186631922112014, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: tutorialLevel
+      objectReference: {fileID: 0}
+    - target: {fileID: 348186631922112014, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 958453134368517317, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
       propertyPath: m_Camera
@@ -670,10 +738,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 6230906500649240115, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8070385452043395876, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 236173425}
+    - targetCorrespondingSourceObject: {fileID: 8070385452043395876, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 236173426}
   m_SourcePrefab: {fileID: 100100000, guid: 4e9c612a58c300541ae0e23fbd0f03d4, type: 3}
 --- !u!1001 &5292816408601578512
 PrefabInstance:
