@@ -37,7 +37,7 @@ public class MeanGuy : MonoBehaviour
     Transform player;
     void Start()
     {
-        
+        GetComponent<Renderer>().enabled = false;
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         agent.speed = patrolSpeed;
@@ -261,6 +261,8 @@ IEnumerator GoToNextWaypoint()
 }
     public void TurnAround()
 {
+    
     StartCoroutine(SmoothTurn(-90f, turnSpeed));
+    originalRotation = transform.rotation;
 }
 }
