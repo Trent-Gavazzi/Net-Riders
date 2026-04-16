@@ -19,7 +19,8 @@ public class MeanGuy : MonoBehaviour
     public float waitTime = .3f;
     public Transform pathHolder;
     
-
+    public float chaseSpeed = 6f;
+    public float patrolSpeed = 3f;  
     Movement playerScript;
 
     //this is vision stuff
@@ -37,7 +38,7 @@ public class MeanGuy : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-
+        agent.speed = patrolSpeed;
         playerScript = player.GetComponent<Movement>();
         
         
@@ -132,6 +133,8 @@ void ReturnUpdate()
     if (!waiting && !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + 0.1f)
     {
         state = State.Patrol;
+
+        agent.speed = patrolSpeed;
         agent.SetDestination(waypoints[waypointIndex]);
         if (stationary)
         StartCoroutine(ReturnToOriginalRotation());
@@ -147,6 +150,8 @@ void ReturnUpdate()
         if (!canSeePlayer())
         {
             state = State.Return;
+
+            agent.speed = patrolSpeed;  
             agent.SetDestination(startPosition);
             return;
         }
@@ -159,6 +164,7 @@ void ReturnUpdate()
         agent.SetDestination(startPosition);
     return;
     }
+        agent.speed = chaseSpeed;
         agent.SetDestination(player.position);
     }
 IEnumerator GoToNextWaypoint()
